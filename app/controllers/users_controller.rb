@@ -29,6 +29,11 @@ class UsersController < ApplicationController
       end
    end
 
+  def destroy
+    session[:user_id] = nil    
+    User.find(params[:id]).destroy
+    redirect_to root_url
+  end
     
 private
   def only_see_own
