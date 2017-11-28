@@ -12,33 +12,37 @@
     <%= csrf_meta_tags %>
   </head>
 
-  <body>
-    <div id="NavBar">
-      <nav class="top-bar" data-topbar role="navigation">
-        <ul class="title-area">
-          <li class="name">
-            <h1><%= link_to "Annose", root_path %></h1>
-          </li>
-          <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  <body> 
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+        <li class="name">
+          <h1><%= link_to "Annose", root_path %></h1>
+        </li>
+        <li class="toggle-topbar"><a href="#"><span>Menu</span></a></li>
+      </ul>
+      <section class="top-bar-section">
+        <ul class="right show-for-large-up">
+          <% if !current_user %>
+            <li><%= link_to 'Sign Up', new_user_path %></li>
+            <li><%= link_to 'Login', login_path %></li>
+           <% else %>
+            <li class="has-dropdown not-click active">
+              <a href="#"><%= current_user.name %></a>
+              <ul class="dropdown" >
+                <li><%= link_to 'Profile', current_user %></li>
+                <li><%= link_to 'Logout', logout_path, method: :post %></li>
+              </ul>
+            </li> 
+          <% end %>
         </ul>
-        <section class="top-bar-section">
-          <ul class="right">
-            <% if !current_user %>
-              <li><%= link_to 'Sign Up', new_user_path %></li>
-              <li><%= link_to 'Login', login_path %></li>
-             <% else %>
-              <li><%= link_to 'Logout', logout_path, method: :post %></li> 
-            <% end %>
-          </ul>
-        </section>
-      </nav>
-    </div>
+      </section>
+    </nav>
+
+
     <div class="row">
-      <% if current_user %>
-        <small> Logged in as: <%= current_user.email %> </small> <br>
-      <% end %>
       <%= yield %>
     </div>
+
     <%= javascript_include_tag "application" %>
   </body>
 </html>
