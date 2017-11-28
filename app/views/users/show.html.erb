@@ -1,0 +1,22 @@
+<br>
+<h2>User Page</h3>
+<h5>Change password</h1>
+<%= form_for @user, method: :patch do |f| %>
+  <% if @user.errors.any? %>
+    <div class="error_messages">
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.password_field :password, placeholder: 'New Password'%>
+  </div>
+  <div class="field">
+    <%= f.password_field :password_confirmation, placeholder:'New Password Confirmation' %>
+  </div>
+  <div class="actions"><%= f.submit "Confirm", class: 
+  'button' %></div>
+<% end %>
