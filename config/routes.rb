@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     end
     resources :documents
   end
+  resources :annotations
   # pages
   root 'pages#home'
   # home should redirect to dashboard if the user is logged in.
