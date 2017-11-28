@@ -51,7 +51,7 @@ class Document extends React.Component {
       var str = words.slice(segments[i][0], segments[i][1]).map(space);
       this.segments.push(<Segment segmentString={str.join("")} annotations={segments[i][2]}
                                   start={segments[i][0]} end={segments[i][1]}
-                                  select_handler={this.select_handler}/>);
+                                  selectCallBack={this.select_handler}/>);
     }
     this.state = {
       selected: this.segments[0],
@@ -59,13 +59,9 @@ class Document extends React.Component {
 
   }
   select_handler(segment) {
-    var handler = function(e) {
-      e.preventDefault();
-      this.setState({
-        selected: segment,
-      });
-    };
-    return handler;
+    this.setState({
+      selected: segment,
+    });
   }
   render () {
     return (
@@ -75,6 +71,7 @@ class Document extends React.Component {
           <center>
             <font size='4'>{this.segments}</font>
           </center>
+          {this.state.selected}
         </div>
       </div>
     );

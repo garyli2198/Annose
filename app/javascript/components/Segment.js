@@ -1,19 +1,36 @@
 import React from "react"
 import PropTypes from "prop-types"
 class Segment extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      styles: {backgroundColor: '#ccffff',},
+    }
+  }
+  onClick(e) {
+    e.preventDefault();
+    if (this.state.styles.backgroundColor == '#ccffff') {
+      this.setState({
+        styles: {backgroundColor: 'yellow',},
+      });
+      this.props.selectHandler(this);
+    } else {
+      this.setState({
+        styles: {backgroundColor: '#ccffff',},
+      });
+    }
+    
+  }
   render () {
-    var styles = {
-      backgroundColor: '#ccffff',
-    };
     if (this.props.annotations.length) {
       return (
-          <span style={styles}>
+          <span style={this.state.styles} onClick = {this.onClick.bind(this)}>
             {this.props.segmentString}
           </span>
       );
     }
     return (
-      <span onClick = {this.props.select_handler(this)}>
+      <span>
           {this.props.segmentString}
       </span>
     );
@@ -26,6 +43,6 @@ Segment.propTypes = {
   annotations: PropTypes.array,
   start: PropTypes.number,
   end: PropTypes.number,
-  select_handler: PropTypes.func,
+  selectHandler: PropTypes.func,
 };
 export default Segment
