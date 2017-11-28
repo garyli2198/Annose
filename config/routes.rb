@@ -11,12 +11,14 @@ Rails.application.routes.draw do
   # classroooms
   resources :classrooms do 
     collection do
-      get :created
-      get :following
+      get :created # gets classes created by current user
+      get :following # gets classes that the user is in but not admin
       get :search
     end
+    resources :documents
   end
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  # pages
   root 'pages#home'
+  # home should redirect to dashboard if the user is logged in.
+  get '/dashboard', to: 'pages#dashboard' 
 end
