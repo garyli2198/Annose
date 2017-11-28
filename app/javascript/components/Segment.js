@@ -5,19 +5,23 @@ class Segment extends React.Component {
     super(props);
     this.state = {
       styles: {backgroundColor: '#ccffff',},
+      visible: true,
     }
   }
   onClick(e) {
     e.preventDefault();
-    if (this.state.styles.backgroundColor == '#ccffff') {
-      this.setState({
-        styles: {backgroundColor: 'yellow',},
-      });
-      this.props.selectHandler(this);
-    } else {
-      this.setState({
-        styles: {backgroundColor: '#ccffff',},
-      });
+    if (this.state.visible) {
+      if (this.state.styles.backgroundColor == '#ccffff') {
+        this.setState({
+          styles: {backgroundColor: 'yellow',},
+        });
+        this.props.selectCallBack(this);
+      } else {
+        this.setState({
+          styles: {backgroundColor: '#ccffff',},
+        });
+        this.props.selectCallBack(this, false);
+      }
     }
     
   }
@@ -43,6 +47,6 @@ Segment.propTypes = {
   annotations: PropTypes.array,
   start: PropTypes.number,
   end: PropTypes.number,
-  selectHandler: PropTypes.func,
+  selectCallBack: PropTypes.func,
 };
 export default Segment
