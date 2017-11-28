@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171128042731) do
+ActiveRecord::Schema.define(version: 20171128051252) do
 
   create_table "annotations", force: :cascade do |t|
     t.text "body"
@@ -29,11 +29,6 @@ ActiveRecord::Schema.define(version: 20171128042731) do
     t.integer "admin_id"
   end
 
-  create_table "classrooms_members", id: false, force: :cascade do |t|
-    t.integer "classroom_id"
-    t.integer "member_id"
-  end
-
   create_table "documents", force: :cascade do |t|
     t.string "name"
     t.text "body"
@@ -46,6 +41,13 @@ ActiveRecord::Schema.define(version: 20171128042731) do
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users_classrooms", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "classroom_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

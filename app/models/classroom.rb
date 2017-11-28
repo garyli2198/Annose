@@ -1,4 +1,5 @@
 class Classroom < ApplicationRecord
-    has_and_belongs_to_many :members, class_name: :User, foriegn_key: :member_id
+    has_many :users_classrooms
+    has_many :users, through: :users_classrooms
     has_many :documents
 end
