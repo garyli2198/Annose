@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import Segment from "./segment"
 import Annotation from "./annotation"
 import Word from "./word"
-
+import AnnotationForm from "./annotationForm"
 function mergeIntervals(intervals, length)
 {
     if (intervals.length <= 0)
@@ -18,11 +18,11 @@ function mergeIntervals(intervals, length)
     stack.push(intervals[0]);
     for (var i = 1, len = intervals.length ; i < len; i++ ) {
       last = stack[stack.length - 1];
-      if (last[1] <= intervals[i][0]) {
+      if (last[1] < intervals[i][0]) {
         stack.push( [last[1] + 1, intervals[i][0] - 1, []]);
         stack.push( intervals[i] );
       }
-      else if (last[1] < intervals[i][1]) {
+      else if (last[1] <= intervals[i][1]) {
         last[1] = intervals[i][1]; 
         last[2].push(intervals[i][2][0]);
         stack.pop();
@@ -33,27 +33,40 @@ function mergeIntervals(intervals, length)
     if (last[1] < length - 1) {
       stack.push([last[1] + 1, length - 1, []])
     }
+    console.log(stack);
     return stack;
 }
 
 class Document extends React.Component {
   constructor(props) {
     super(props);
+    this.select_handler = this.select_handler.bind(this);
+    this.newAnnotationClick = this.newAnnotationClick.bind(this);
+    this.registerWord = this.registerWord.bind(this);
+    this.registerMark = this.registerMark.bind(this);
+    this.clearMarks = this.clearMarks.bind(this);
+    this.registerAnnotationForm = this.registerAnnotationForm.bind(this);
+    this.handleCreate = this.handleCreate.bind(this);
+    this.initSegments = this.initSegments.bind(this);
     this.state = {
       selected: null,
       annotating: false,
       words: [],
       num_marks: 0,
       marks: [],
+      annotationForm: null,
+      annotations: this.props.annotations,
     }
-    this.select_handler = this.select_handler.bind(this);
-    this.newAnnotationClick = this.newAnnotationClick.bind(this);
-    this.registerWord = this.registerWord.bind(this);
-    this.registerMark = this.registerMark.bind(this);
-    this.clearMarks = this.clearMarks.bind(this);
+    this.annotationForm = (<AnnotationForm quote='' start={-1} end={-1} user={this.props.currentUser} 
+                                      document={this.props.document} register={this.registerAnnotationForm} 
+                                      handleCreate = {this.handleCreate} token={this.props.token}/>);
+    this.initSegments(this.state.annotations);
+  }
+
+  initSegments(annotations) {
     var segments = [];
-    for (var i = 0; i < this.props.annotations.length; i++) {
-      var a = this.props.annotations[i];
+    for (var i = 0; i < annotations.length; i++) {
+      var a = annotations[i];
       segments.push([a.start_index, a.end_index, [a]]);
     }
     var words = this.props.document.body.split(" ");
@@ -61,27 +74,41 @@ class Document extends React.Component {
     var space = function(s) { return s.concat(' ') };
     this.segments = [];
     for (var i = 0; i < segments.length; i++) {
-      var str = words.slice(segments[i][0], segments[i][1]).map(space);
+      var str = words.slice(segments[i][0], segments[i][1] + 1).map(space);
       this.segments.push(<Segment segmentString={str.join("")} annotations={segments[i][2]}
                                   start={segments[i][0]} end={segments[i][1]}
                                   selectCallBack={this.select_handler}/>);
     }
-    console.log(this.segments);
   }
 
   newAnnotationClick(e) {
     this.setState({
-      annotating: true,
+      annotating: !this.state.annotating,
       num_marks: 0,
+      marks: [],
+      words: [],
     });
+  }
+  handleCreate(annotation) {
+    var annotations = this.state.annotations.slice();
+    annotations.push(annotation);
+    this.initSegments(annotations);
+    this.setState({
+      annotations: annotations,
+      annotating: false,
+    });
+  }
+  registerAnnotationForm(form) {
+    this.setState({
+      annotationForm: form,
+    });
+    console.log(form);
   }
   registerWord(word) {
     this.state.words.push(word);
     this.state.marks.push(false);
-    console.log(this.state.words);
   }
   registerMark(index) {
-    console.log(this.state.words[0]);
     this.state.marks[index] = true;
     if (this.state.num_marks > 0) {
       var i = 0;
@@ -99,6 +126,15 @@ class Document extends React.Component {
           marked: true,
         });
       }
+      var words = this.props.document.body.split(" ");
+      var space = function(s) { return s.concat(' ') };
+      var quote = words.slice(i, e+1).map(space);
+      this.state.annotationForm.setState({
+        quote: quote,
+        start: i,
+        end: e,
+      })
+      console.log(this.state.annotationForm);
     }
     this.setState({num_marks: this.state.num_marks + 1});
 
@@ -129,7 +165,7 @@ class Document extends React.Component {
     }
   }
   render () {
-    var annotations = []
+    var annotations = [];
     var space = function(s) { return s.concat(' ') };
     var words = this.props.document.body.split(" ");
     this.words_c = [];
@@ -148,6 +184,7 @@ class Document extends React.Component {
           <Annotation annotation={a} quote={str}/>)
       }
     }
+
     
     return (
       <div data-equalizer>
@@ -166,7 +203,7 @@ class Document extends React.Component {
               {!this.state.annotating && "New Annotation"}{this.state.annotating && "Cancel"}
             </button>
           </center>
-          {!this.state.annotating && annotations}
+          {!this.state.annotating && annotations}{this.state.annotating && this.annotationForm}
         </div>
       </div>
     );
@@ -175,6 +212,8 @@ class Document extends React.Component {
 
 Document.propTypes = {
   document: PropTypes.object,
-  annotations: PropTypes.array
+  annotations: PropTypes.array,
+  currentUser: PropTypes.object,
+  token: PropTypes.string,
 };
 export default Document

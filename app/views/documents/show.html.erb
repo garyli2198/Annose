@@ -1,1 +1,1 @@
-<%= react_component("Annotator", {document: @document, annotations: @document.annotations}) %>
+<%= react_component("Annotator", {document: @document, annotations: @document.annotations, currentUser: current_user, token: form_authenticity_token}) %>
