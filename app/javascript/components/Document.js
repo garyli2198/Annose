@@ -1,13 +1,13 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Segment from "./segment"
-import Annotation from "./annotation"
-import Word from "./word"
-import AnnotationForm from "./annotationForm"
+import Segment from "./Segment"
+import Annotation from "./Annotation"
+import Word from "./Word"
+import AnnotationForm from "./AnnotationForm"
 function mergeIntervals(intervals, length)
 {
     if (intervals.length <= 0)
-      return;
+      return [[0, length - 1, []]];
     var stack = [], last;
     intervals.sort(function(a,b) {
       return a[0] - b[0];

@@ -26,6 +26,7 @@ class Segment extends React.Component {
     
   }
   render () {
+    console.log(this.props.annotations);
     if (this.props.annotations.length) {
       return (
           <span style={this.state.styles} onClick = {this.onClick.bind(this)}>
