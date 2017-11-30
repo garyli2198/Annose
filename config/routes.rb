@@ -6,12 +6,16 @@ Rails.application.routes.draw do
   post '/logout', to: 'sessions#destroy'
 
   # users
-  resources :users
+  resources :users do
+    member do
+      get :name
+    end
+  end
 
   # classroooms
   resources :classrooms do 
     collection do
-      get :search
+      post :join
     end
     resources :documents
   end
@@ -19,5 +23,4 @@ Rails.application.routes.draw do
   # pages
   root 'pages#home'
   # home should redirect to dashboard if the user is logged in.
-  get '/dashboard', to: 'pages#dashboard' 
 end

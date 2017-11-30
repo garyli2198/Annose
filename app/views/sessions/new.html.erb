@@ -1,3 +1,5 @@
+<div class="row white-panel">
+
 <%= flash[:notice] if flash[:notice] %>
 <h1>Log In</h1>
 <%= form_tag login_path do %>
@@ -5,3 +7,4 @@
     <%= password_field_tag :password, nil, placeholder: 'Password' %>
     <%= submit_tag "Log In", class: "button"%>
 <% end %>
+</div>

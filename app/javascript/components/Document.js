@@ -4,6 +4,7 @@ import Segment from "./Segment"
 import Annotation from "./Annotation"
 import Word from "./Word"
 import AnnotationForm from "./AnnotationForm"
+import UserFilter from "./UserFilter"
 function mergeIntervals(intervals, length)
 {
   if (intervals.length <= 0)
@@ -48,6 +49,11 @@ class Document extends React.Component {
     this.registerAnnotationForm = this.registerAnnotationForm.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.initSegments = this.initSegments.bind(this);
+    this.updateUserFilter = this.updateUserFilter.bind(this);
+    var selectedUsers = [];
+    for (var i = 0; i < this.props.users.length; i++) {
+      selectedUsers.push(this.props.users[i].id);
+    }
     this.state = {
       selected: null,
       annotating: false,
@@ -56,6 +62,7 @@ class Document extends React.Component {
       marks: [],
       annotationForm: null,
       annotations: this.props.annotations,
+      selectedUsers: selectedUsers,
     }
     this.annotationForm = (<AnnotationForm quote='' start={-1} end={-1} user={this.props.currentUser} 
                                       document={this.props.document} register={this.registerAnnotationForm} 
@@ -67,7 +74,9 @@ class Document extends React.Component {
     var segments = [];
     for (var i = 0; i < annotations.length; i++) {
       var a = annotations[i];
-      segments.push([a.start_index, a.end_index, [a]]);
+      if (this.state.selectedUsers.indexOf(a.user_id) >= 0) {
+        segments.push([a.start_index, a.end_index, [a]]);
+      }
     }
     var words = this.props.document.body.split(" ");
     segments = mergeIntervals(segments, words.length);
@@ -79,6 +88,23 @@ class Document extends React.Component {
                                   start={segments[i][0]} end={segments[i][1]}
                                   selectCallBack={this.select_handler}/>);
     }
+  }
+  updateUserFilter(user) {
+    console.log(this.state.selectedUsers);
+    var i = this.state.selectedUsers.indexOf(user.id);
+    if (i < 0) {
+      this.state.selectedUsers.push(user.id);
+    } else {
+      this.state.selectedUsers.splice(i, 1);
+    }
+    console.log(this.state.selectedUsers);
+    var annotations = this.state.annotations.slice();
+
+    this.initSegments(annotations);
+    this.setState({
+      annotations: annotations,
+      annotating: false,
+    });
   }
 
   newAnnotationClick(e) {
@@ -174,16 +200,29 @@ class Document extends React.Component {
     if (this.state.selected) {
       for (var i = 0; i < this.state.selected.props.annotations.length; i++) {
         var a = this.state.selected.props.annotations[i];
+        var user = null;
+        for (var k = 0; k < this.props.users.length; k++) {
+          if (this.props.users[k].id == a.user_id) {
+            user = this.props.users[k];
+          }
+        }
         var str = words.slice(a.start_index, a.end_index+1).map(space);
         annotations.push(
-          <Annotation annotation={a} quote={str}/>)
+          <Annotation annotation={a} quote={str} author={user}/>)
       }
     }
-
+    var users = [];
+    for (var i = 0; i < this.props.users.length; i++) {
+      users.push(<UserFilter user={this.props.users[i]} selected={true} register={this.updateUserFilter}/>);
+    }
     
     return (
       <div data-equalizer>
-        <div className="large-8 columns white-panel" data-equalizer-watch>
+        <div className="large-2 columns white-panel" data-equalizer-watch>
+          <center><h3> Users </h3> </center>
+          <center>{users}</center>
+        </div>
+        <div className="large-6 columns white-panel" data-equalizer-watch>
           <center> <h1>{this.props.document.name}</h1> </center>
           <center>
             <font size='4'>{!this.state.annotating && this.segments}</font>
@@ -210,5 +249,6 @@ Document.propTypes = {
   annotations: PropTypes.array,
   currentUser: PropTypes.object,
   token: PropTypes.string,
+  users: PropTypes.array,
 };
 export default Document

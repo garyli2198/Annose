@@ -19,4 +19,8 @@
       <% end %>
     </tbody>
   </table>
+  <br/>
+  <% if current_user.id == @classroom.admin_id %>
+    Classroom invite key: <%= @classroom.key %>
+  <% end %>
 </div>

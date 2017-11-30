@@ -4,6 +4,10 @@ class DocumentsController < ApplicationController
     def new
         @document = Document.new
         @classroom = Classroom.find(params[:classroom_id])
+        if @classroom.admin_id != current_user.id
+            redirect_to root_path
+        end
+
     end
     def create
         document = Document.new(document_params)
@@ -14,6 +18,9 @@ class DocumentsController < ApplicationController
 
     def show
         @classroom = Classroom.find(params[:classroom_id])
+        if not @classroom.users.include?(current_user)
+            redirect_to root_path
+        end
         if @classroom.documents.exists?(id: params[:id])
             @document = @classroom.documents.find(params[:id])
         else
@@ -22,6 +29,6 @@ class DocumentsController < ApplicationController
     end
     private
     def document_params
-      params.require(:document).permit(:name, :body)
+        params.require(:document).permit(:name, :body)
     end
 end

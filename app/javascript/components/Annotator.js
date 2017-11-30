@@ -13,7 +13,8 @@ class Annotator extends React.Component {
         <Document document={this.props.document} 
           annotations={this.props.annotations}
           currentUser={this.props.currentUser}
-          token={this.props.token}/>
+          token={this.props.token}
+          users={this.props.users}/>
       </div>
     );
   }
@@ -24,5 +25,6 @@ Annotator.propTypes = {
   annotations: PropTypes.array,
   currentUser: PropTypes.object,
   token: PropTypes.string,
+  users: PropTypes.array,
 };
 export default Annotator

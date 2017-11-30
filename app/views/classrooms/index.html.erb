@@ -1,0 +1,31 @@
+<div class="white-panel">
+  <h2>Dashboard</h2>
+  
+  <table width="100%", class="unstriped">
+    <thead>
+      <tr>
+        <th>Classroom</th>
+        <th>Admin</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @classrooms.each do |c| %>
+        <tr>
+          <td><%= link_to c.name, classroom_path(c)%></td>
+          <td><%= c.admin.name %></td>
+          <td><%= c.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Classroom', new_classroom_path, class: 'button small' %>
+</div>
+<div class="white-panel">
+
+<h4>Join a Class:</h4>
+  <%= form_tag join_classrooms_path do%>
+    <%= text_field_tag :key, nil, placeholder: 'Enter invite key here:' %>
+    <%= submit_tag "Join", class: "button tiny"%>
+  <% end %>
+</div>

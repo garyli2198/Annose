@@ -1,0 +1,9 @@
+<div class="white-panel">
+  <h1>New Classroom</h1>
+  <div id="class-form">
+    <%= form_for @classroom, url: classrooms_path do |f| %>
+      <%= f.text_field :name, placeholder: 'Classroom Name' %>
+      <%= f.submit 'Submit', class: 'button small' %>
+    <% end %>
+  </div>
+</div>
