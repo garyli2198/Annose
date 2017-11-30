@@ -11,8 +11,6 @@ Rails.application.routes.draw do
   # classroooms
   resources :classrooms do 
     collection do
-      get :created # gets classes created by current user
-      get :following # gets classes that the user is in but not admin
       get :search
     end
     resources :documents

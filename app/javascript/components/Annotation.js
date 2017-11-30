@@ -22,7 +22,6 @@ class Annotation extends React.Component {
       this.setAuthor.bind(this));
   }
   render () {
-    
     return (
       <div className="panel callout radius">
         <strong> Quote: </strong>"{this.props.quote}" <br/>

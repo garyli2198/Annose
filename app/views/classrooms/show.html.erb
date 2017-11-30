@@ -1,0 +1,22 @@
+<div class="white-panel">
+  <h1><%= @classroom.name %></h1>
+  <% if current_user.id == @classroom.admin_id %>
+    <%= link_to "New Document", new_classroom_document_path(@classroom), class: "button small" %>
+  <% end %>
+  <table width="100%", class="unstriped">
+    <thead>
+      <tr>
+        <th>Document</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @classroom.documents.each do |doc| %>
+        <tr>
+          <td><%= link_to doc.name, classroom_document_path(@classroom, doc)%></td>
+          <td><%= doc.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

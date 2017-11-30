@@ -1,0 +1,10 @@
+<div class="white-panel">
+  <h1>New Document</h1>
+  <div id="doc-form">
+    <%= form_for @document, url: classroom_documents_path(@classroom) do |f| %>
+      <%= f.text_field :name, placeholder: 'Title' %>
+      <%= f.text_area :body, placeholder: 'Enter Text', rows: 30 %>
+      <%= f.submit 'Submit', class: 'button small' %>
+    <% end %>
+  </div>
+</div>

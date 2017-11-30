@@ -1,5 +1,17 @@
 class DocumentsController < ApplicationController
     before_action :authorize
+
+    def new
+        @document = Document.new
+        @classroom = Classroom.find(params[:classroom_id])
+    end
+    def create
+        document = Document.new(document_params)
+        document.classroom_id = params[:classroom_id]
+        document.save
+        redirect_to classroom_path(document.classroom_id)
+    end
+
     def show
         @classroom = Classroom.find(params[:classroom_id])
         if @classroom.documents.exists?(id: params[:id])
@@ -7,5 +19,9 @@ class DocumentsController < ApplicationController
         else
             redirect_to root_path
         end
+    end
+    private
+    def document_params
+      params.require(:document).permit(:name, :body)
     end
 end
