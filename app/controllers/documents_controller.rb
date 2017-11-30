@@ -1,4 +1,5 @@
 class DocumentsController < ApplicationController
+    before_action :authorize
     def show
         @classroom = Classroom.find(params[:classroom_id])
         if @classroom.documents.exists?(id: params[:id])

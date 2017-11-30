@@ -5,6 +5,7 @@ import Document from './Document'
 class Annotator extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props.currentUser);
   }
   render () {
     return (

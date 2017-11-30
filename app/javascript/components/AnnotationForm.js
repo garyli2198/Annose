@@ -22,7 +22,7 @@ class AnnotationForm extends React.Component {
   createAnnotation(e) {
     e.preventDefault();
     if (this.state.body.length && this.state.start >= 0  && this.state.end >= 0) {
-      console.log(this.props.token);
+      console.log(this.props.user);
       axios.post('/annotations', {
         body: this.state.body,
         user_id: this.props.user.id,

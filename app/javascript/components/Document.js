@@ -6,35 +6,35 @@ import Word from "./Word"
 import AnnotationForm from "./AnnotationForm"
 function mergeIntervals(intervals, length)
 {
-    if (intervals.length <= 0)
-      return [[0, length - 1, []]];
-    var stack = [], last;
-    intervals.sort(function(a,b) {
-      return a[0] - b[0];
-    });
-    if (intervals[0][0]) {
-      stack.push([0, intervals[0][0] - 1, []]);
-    }
-    stack.push(intervals[0]);
-    for (var i = 1, len = intervals.length ; i < len; i++ ) {
-      last = stack[stack.length - 1];
-      if (last[1] < intervals[i][0]) {
-        stack.push( [last[1] + 1, intervals[i][0] - 1, []]);
-        stack.push( intervals[i] );
-      }
-      else if (last[1] <= intervals[i][1]) {
-        last[1] = intervals[i][1]; 
-        last[2].push(intervals[i][2][0]);
-        stack.pop();
-        stack.push(last);
-      }
-    }
+  if (intervals.length <= 0)
+    return [[0, length - 1, []]];
+  var stack = [], last;
+  intervals.sort(function(a,b) {
+    return a[0] - b[0];
+  });
+  if (intervals[0][0]) {
+    stack.push([0, intervals[0][0] - 1, []]);
+  }
+  stack.push(intervals[0]);
+  for (var i = 1, len = intervals.length ; i < len; i++ ) {
     last = stack[stack.length - 1];
-    if (last[1] < length - 1) {
-      stack.push([last[1] + 1, length - 1, []])
+    if (last[1] < intervals[i][0]) {
+      stack.push( [last[1] + 1, intervals[i][0] - 1, []]);
+      stack.push( intervals[i] );
     }
-    console.log(stack);
-    return stack;
+    else if (last[1] >= intervals[i][0]) {
+      last[1] = Math.max(intervals[i][1], last[1]); 
+      last[2].push(intervals[i][2][0]);
+      stack.pop();
+      stack.push(last);
+    }
+  }
+  last = stack[stack.length - 1];
+  if (last[1] < length - 1) {
+    stack.push([last[1] + 1, length - 1, []])
+  }
+  console.log(stack);
+  return stack;
 }
 
 class Document extends React.Component {
@@ -102,7 +102,6 @@ class Document extends React.Component {
     this.setState({
       annotationForm: form,
     });
-    console.log(form);
   }
   registerWord(word) {
     this.state.words.push(word);
@@ -119,8 +118,6 @@ class Document extends React.Component {
       while(!this.state.marks[e]) {
         e = e - 1;
       }
-      console.log(i);
-      console.log(!this.state.marks[i + 1]);
       for (var k = i; k < e; k++) {
         this.state.words[k+1].setState({
           marked: true,
@@ -134,7 +131,6 @@ class Document extends React.Component {
         start: i,
         end: e,
       })
-      console.log(this.state.annotationForm);
     }
     this.setState({num_marks: this.state.num_marks + 1});
 
@@ -148,7 +144,6 @@ class Document extends React.Component {
     }
   }
   select_handler(segment, select=true) {
-    console.log(this.state.selected);
     if (this.state.selected) {
       this.state.selected.setState({
         styles: {backgroundColor: '#ccffff',},
