@@ -1,24 +1,39 @@
-# README
+# Annose
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+**Team Members:** Stanley Huang, Kevin Liu, Gary Li, Jonathan Lin
+**Demo Link:** https://youtu.be/c_ER6hF-AXc
 
-Things you may want to cover:
+**Idea:** An application in which students can join classrooms, upload documents to classrooms, and collaboratively annotate documents. Users have the ability to choose whose annotations they see.
 
-* Ruby version
+**Models and Description:**
+User
+* has an email, password, and name
+* has many classrooms and annotations
+* Users can also be admins to certain Classrooms
 
-* System dependencies
+Classroom
+* has a name, key, and admin ID
+* has many documents and users
+* the "key" is the method through which other students can join the classroom
 
-* Configuration
+Document
+* has a name and body text
+* belongs to a classroom
 
-* Database creation
+Annotation
+* has a body, start and end indices
+* belongs to a user and a document
+* start and end indices signify where in the text the annotation references
 
-* Database initialization
+**Features:**
+* Users can log in
+* Users can make classrooms
+* Users can add documents to classrooms
+* Users can add annotations to documents
+* Users can filter whose annotations they see
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+**Division of Labor:**
+* Stanley: Implemented annotations for documents
+* Kevin: User authentication and documents
+* Gary: Dashboard and classroom front end
+* Jonathan: Dashboard and classroom back end
